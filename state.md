@@ -2,12 +2,12 @@
 
 ## Current Status
 
-Repository scaffolded. All modules are placeholders ready for implementation.
+Scaffold ready. Awaiting first task.
 
 ## Next Step
 
-Await plan for first bounded task.
+—
 
 ## Open Issues
 
-None.
+—
