@@ -59,6 +59,9 @@ Rules:
 - Implement tasks in order.
 - Do not skip tasks.
 - Do not implement features outside the active plan.
+- Each task should change at most 5 files. If more are needed, split the task.
+- Plan files should stay under 300 lines. If a plan grows beyond that, break it into
+  multiple plan files in the track.
 
 ### Post-Task Completion
 

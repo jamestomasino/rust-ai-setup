@@ -14,6 +14,7 @@
 ## Coding
 
 - Keep modules small. Prefer one public type per file. No god modules.
+- Aim for source files under 400 lines. If a file grows beyond that, split it.
 - Use explicit types — enums and structs over strings.
 - Prefer validated constructors and newtypes for constrained values.
 - Prefer total functions, explicit data flow, pure logic in `domain/`.
