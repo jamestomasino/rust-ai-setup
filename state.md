@@ -31,9 +31,3 @@ Read these in order:
 ## Completed Tasks
 
 —
-
-## Constraints
-
-- Keep domain side-effect free.
-- Keep UI from mutating domain state directly.
-- Preserve all existing tests.

@@ -12,6 +12,7 @@ Intent -> Command -> Event -> State
 - State changes flow through typed intents, commands, events, and reducers
 - `domain/` contains no side effects
 - Illegal states must be unrepresentable
+- Important actions use append-only event logs
 
 ## Boundaries
 
@@ -20,6 +21,17 @@ Intent -> Command -> Event -> State
 | domain/   | State, invariants        | Nothing external |
 | app/      | Orchestration, adapters  | domain/          |
 | ui/       | Rendering, input mapping | domain/ (read)   |
+
+- Traits are used only at external boundaries
+- Provider, tool, and I/O integrations sit behind ports
+- Adapters are thin and replaceable
+
+## Naming Conventions
+
+Use these stable names for core types:
+
+- `Intent`, `Command`, `Event`, `Reducer`
+- `ViewModel`, `Port`, `Adapter`
 
 ## Quality Gate
 

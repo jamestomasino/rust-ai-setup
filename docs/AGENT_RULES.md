@@ -23,14 +23,12 @@
 ## Testing
 
 - Write or update tests before implementation.
-- Unit tests for reducers, parsers, policies. Integration tests for ports and adapters.
+- Unit tests for reducers, parsers, policies.
+- Integration tests for ports and adapters.
+- Snapshot tests for TUI rendering where useful.
 - Property tests with `proptest` for invariants and transitions.
+- Stateful property tests for workflows.
 - Never remove tests to make code pass.
-
-## Quality Gate
-
-- `cargo clippy --all-targets --all-features -- -D warnings` must pass.
-- Do not claim a task complete until tests pass and clippy is clean.
 
 ## Context Control
 
