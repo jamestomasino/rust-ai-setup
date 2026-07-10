@@ -18,58 +18,76 @@
 
 ## Repository Map
 
-| Path                  | Purpose                              |
-|-----------------------|--------------------------------------|
-| `docs/`               | Operating rules (AGENT_RULES.md)     |
-| `contracts.md`        | Event flow, public types, invariants |
-| `state.md`            | Current status, next step            |
-| `plan.md`             | Goal, scope, status                  |
-| `src/domain/`         | State, invariants, reducers          |
-| `src/app/`            | Orchestration, ports, adapters       |
-| `src/ui/`             | Ratatui rendering, input handling    |
-| `tests/`              | Integration and acceptance tests     |
-| `fixtures/`           | Test fixtures                        |
+| Path                  | Purpose                                              |
+|-----------------------|------------------------------------------------------|
+| `plan.md`             | **North star** — goal, scope, backlog, done criteria |
+| `docs/`               | **Implementation tracks** — phased task lists        |
+| `docs/AGENT_RULES.md` | Operating rules                                      |
+| `contracts.md`        | Event flow, public types, invariants                 |
+| `state.md`            | Current status, active track, next task              |
+| `src/domain/`         | State, invariants, reducers                          |
+| `src/app/`            | Orchestration, ports, adapters                       |
+| `src/ui/`             | Ratatui rendering, input handling                    |
+| `tests/`              | Integration and acceptance tests                     |
+| `fixtures/`           | Test fixtures                                        |
 
 ## Implementation Tracks
 
-When working on a feature or phase, define a plan file in `docs/` and add it to the track chain below. Each plan file contains scoped tasks with acceptance criteria.
+As a project grows, `plan.md` holds the strategic vision while individual
+implementation tracks live in `docs/`. This keeps the root plan readable and
+lets each phase get its own detailed task list.
+
+Tracks are named `docs/*_TRACK.md` and contain ordered **Tasks** with acceptance
+criteria for a single phase.
+
+### Document Roles
+
+- **`plan.md` (root)** — North star. Goal, scope, backlog, and done criteria
+  for the entire project. Read this to understand *what* we're building.
+- **`docs/*_TRACK.md`** — Implementation tracks. Ordered Tasks with acceptance
+  criteria for a specific phase. Read the active one to understand *how* to
+  build the next piece.
+- **`state.md`** — Pointer. Which track is active, what's the next task, what's
+  done. Read this to know *where* to work next.
 
 The current implementation track is defined in `state.md` under "Current Track".
 
 ### Working Session (Minimal Context)
 
-To implement a task, load only these files:
+To implement a Task, load only these files:
 
 1. `AGENTS.md` — architecture and operating rules
 2. `contracts.md` — event flow and invariants
-3. `plan.md` — scope and status
+3. `plan.md` — scope and status (skim for context)
 4. `state.md` — current status and next task
-5. The active plan file (listed in `state.md` under "Current Track")
+5. The active track file (listed in `state.md` under "Current Track")
 
-Do not load every plan file. Load only the active one.
+Do not load every track file. Load only the active one.
 
 Before doing work on the current track, read:
 
-1. The active plan file (see `state.md`)
+1. The active track file (see `state.md`)
 2. `contracts.md`
 3. `state.md`
 
-Rules:
+### Track Rules
 
-- Implement tasks in order.
-- Do not skip tasks.
-- Do not implement features outside the active plan.
-- Each task should change at most 5 files. If more are needed, split the task.
-- Plan files should stay under 300 lines. If a plan grows beyond that, break it into
-  multiple plan files in the track.
+- Implement Tasks in order.
+- Do not skip Tasks.
+- Do not implement features outside the active track.
+- Each Task should change at most 5 files. If more are needed, split the Task.
+- Each track file should stay under 300 lines. If a track grows beyond that,
+  break it into multiple track files in the same phase.
+- When starting a new phase, create a track file in `docs/`, add it to the
+  track chain in `state.md`, and update `plan.md` backlog status if needed.
 
 ### Post-Task Completion
 
-After implementing a task, update `state.md` to:
+After implementing a Task, update `state.md` to:
 
-1. Mark the completed task under "Completed Tasks" with a brief summary
-2. Advance "Next Task" to the following task in the active plan
-3. If the active plan is fully complete, advance to the next plan in the track
+1. Mark the completed Task under "Completed Tasks" with a brief summary
+2. Advance "Next Task" to the following Task in the active track
+3. If the active track is fully complete, advance to the next track in the chain
 4. Commit the changes with a descriptive message
 
 This ensures a fresh session can resume from the correct task.
