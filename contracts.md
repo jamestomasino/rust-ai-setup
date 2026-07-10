@@ -20,3 +20,8 @@ Intent -> Command -> Event -> State
 | domain/   | State, invariants        | Nothing external |
 | app/      | Orchestration, adapters  | domain/          |
 | ui/       | Rendering, input mapping | domain/ (read)   |
+
+## Quality Gate
+
+- `cargo clippy --all-targets --all-features -- -D warnings` must pass
+- Stylistic-only lints (manual_map, redundant_closure, etc.) allowed via `[lints.clippy]` config
