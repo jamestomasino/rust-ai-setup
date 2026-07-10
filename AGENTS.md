@@ -37,14 +37,15 @@ As a project grows, `plan.md` holds the strategic vision while individual
 implementation tracks live in `docs/`. This keeps the root plan readable and
 lets each phase get its own detailed task list.
 
-Tracks are named `docs/*_TRACK.md` and contain ordered **Tasks** with acceptance
-criteria for a single phase.
+Tracks are named `docs/NNN-NAME_TRACK.md` with zero-padded, three-digit indices
+(e.g. `docs/001-SETUP_TRACK.md`). When a track splits into subtracks they use
+dot notation (e.g. `001.1-...`, `001.2-...`).
 
 ### Document Roles
 
 - **`plan.md` (root)** — North star. Goal, scope, backlog, and done criteria
   for the entire project. Read this to understand *what* we're building.
-- **`docs/*_TRACK.md`** — Implementation tracks. Ordered Tasks with acceptance
+- **`docs/NNN-*_TRACK.md`** — Implementation tracks. Ordered Tasks with acceptance
   criteria for a specific phase. Read the active one to understand *how* to
   build the next piece.
 - **`state.md`** — Pointer. Which track is active, what's the next task, what's
