@@ -13,3 +13,6 @@ Cargo.lock
 # OS
 .DS_Store
 Thumbs.db
+
+# Task-local agent working memory
+.agent-scratch.md

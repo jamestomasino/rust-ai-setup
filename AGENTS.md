@@ -4,91 +4,83 @@
 
 ## Quick Start
 
-1. Read this file — architecture and operating rules
-2. Read `contracts.md` — event flow and invariants
-3. Read `plan.md` — scope and status
-4. Read `state.md` — current status
+1. Read `AGENTS.md` and `state.md`.
+2. Read `docs/LLM_LOOP.md` and `docs/AGENT_RULES.md`.
+3. If a track is active, read its goal, frozen decisions, and current task
+   section. Do not dump the whole track.
+4. Locate only the `contracts.md` and `plan.md` sections needed by that task.
+   If no track is active, use their short placeholders to plan the first one.
+5. Inspect `git status --short` and `git log -1 --oneline` before editing.
 
 ## Architecture
 
-- Three layers: **domain** → **app** → **ui**
-- Flow: `Intent → Command → Event → State`
-- `ui/` must not mutate domain state directly; `domain/` has no side effects
-- Starter stack: ratatui, tokio, serde, thiserror, proptest
+- Three layers: **domain** → **app** → **ui**.
+- Flow: `Intent → Command → Event → State`.
+- `ui/` must not mutate domain state directly; `domain/` has no side effects.
+- Starter stack: ratatui, tokio, serde, thiserror, proptest.
 
 ## Repository Map
 
-| Path                  | Purpose                                              |
-|-----------------------|------------------------------------------------------|
-| `plan.md`             | **North star** — goal, scope, backlog, done criteria |
-| `docs/`               | **Implementation tracks** — phased task lists        |
-| `docs/AGENT_RULES.md` | Operating rules                                      |
-| `contracts.md`        | Event flow, public types, invariants                 |
-| `state.md`            | Current status, active track, next task              |
-| `src/domain/`         | State, invariants, reducers                          |
-| `src/app/`            | Orchestration, ports, adapters                       |
-| `src/ui/`             | Ratatui rendering, input handling                    |
-| `tests/`              | Integration and acceptance tests                     |
-| `fixtures/`           | Test fixtures                                        |
+| Path | Purpose |
+|---|---|
+| `plan.md` | Goal, scope, track-level backlog, release criteria |
+| `contracts.md` | Public boundaries, types, and invariants |
+| `state.md` | Small active-track/task cursor and recovery checkpoint |
+| `.agent-scratch.md` | Ignored working decisions for the active task only |
+| `docs/NNN-*_TRACK.md` | Ordered, independently testable tasks for a phase |
+| `docs/AGENT_RULES.md` | Task readiness and execution rules |
+| `docs/TASK_TEMPLATE.md` | Required task shape |
+| `docs/LLM_LOOP.md` | Iterative and compaction recovery protocol |
+| `src/domain/` | State, invariants, reducers |
+| `src/app/` | Orchestration, ports, adapters |
+| `src/ui/` | Ratatui rendering and input mapping |
+| `tests/` | Integration and acceptance tests |
+| `fixtures/` | Test fixtures |
 
-## Implementation Tracks
+## Document Roles
 
-As a project grows, `plan.md` holds the strategic vision while individual
-implementation tracks live in `docs/`. This keeps the root plan readable and
-lets each phase get its own detailed task list.
+- `plan.md` is the north star, not a detailed task log.
+- `contracts.md` owns accepted public behavior and invariants.
+- Each track owns its ordered task definitions and acceptance criteria.
+- `state.md` identifies exactly one active task or planning step.
+- `.agent-scratch.md` holds tentative, task-scoped reasoning across compaction;
+  it never overrides the other files and is cleared at task boundaries.
 
-Tracks are named `docs/NNN-NAME_TRACK.md` with zero-padded, three-digit indices
-(e.g. `docs/001-SETUP_TRACK.md`). When a track splits into subtracks they use
-dot notation (e.g. `001.1-...`, `001.2-...`).
+Tracks use `docs/NNN-NAME_TRACK.md` with zero-padded three-digit indices.
+Subtracks may use dot notation, such as `001.1-NAME_TRACK.md`. Keep each track
+under 300 lines; split a long track instead of loading it whole.
 
-### Document Roles
+## Working Session
 
-- **`plan.md` (root)** — North star. Goal, scope, backlog, and done criteria
-  for the entire project. Read this to understand *what* we're building.
-- **`docs/NNN-*_TRACK.md`** — Implementation tracks. Ordered Tasks with acceptance
-  criteria for a specific phase. Read the active one to understand *how* to
-  build the next piece.
-- **`state.md`** — Pointer. Which track is active, what's the next task, what's
-  done. Read this to know *where* to work next.
+At startup or after compaction, load only the Quick Start working set. Read
+sections of `contracts.md` and `plan.md` by heading when needed. Do not load
+future tracks or `docs/STATE_ARCHIVE.md` during normal startup. Before each new
+task, reread `state.md` and that task's section rather than relying on chat
+memory.
 
-The current implementation track is defined in `state.md` under "Current Track".
+If the checkpoint is active, resume only that task. Read `.agent-scratch.md`
+only when its task ID matches the checkpoint and reconcile it with Git, tests,
+and accepted documents. If there is no active track, complete the planning step
+in `state.md` before implementation.
 
-### Working Session (Minimal Context)
+## Track Rules
 
-To implement a Task, load only these files:
+- Implement tasks in order and only from the active track.
+- A task must meet the Definition of Ready in `docs/AGENT_RULES.md`.
+- Each task changes at most five primary files, excluding tests and `state.md`.
+  Split oversized or ambiguous tasks in a planning-only commit first.
+- Tests precede or accompany implementation. Keep each slice independently
+  testable and leave the repository coherent.
+- Unnamed dependencies, public-contract changes, destructive work, and broad
+  refactors require explicit approval unless already authorized by the active
+  task or user.
 
-1. `AGENTS.md` — architecture and operating rules
-2. `contracts.md` — event flow and invariants
-3. `plan.md` — scope and status (skim for context)
-4. `state.md` — current status and next task
-5. The active track file (listed in `state.md` under "Current Track")
+## Task Completion
 
-Do not load every track file. Load only the active one.
+Run the task's acceptance check and a proportional quality gate. Verify only
+allowed files changed. Advance `state.md`, clear its checkpoint and the ignored
+scratchpad, and commit exactly one completed task. In a continuing run, reread
+the cursor and next task section, then continue if context permits.
 
-Before doing work on the current track, read:
-
-1. The active track file (see `state.md`)
-2. `contracts.md`
-3. `state.md`
-
-### Track Rules
-
-- Implement Tasks in order.
-- Do not skip Tasks.
-- Do not implement features outside the active track.
-- Each Task should change at most 5 files. If more are needed, split the Task.
-- Each track file should stay under 300 lines. If a track grows beyond that,
-  break it into multiple track files in the same phase.
-- When starting a new phase, create a track file in `docs/`, add it to the
-  track chain in `state.md`, and update `plan.md` backlog status if needed.
-
-### Post-Task Completion
-
-After implementing a Task, update `state.md` to:
-
-1. Mark the completed Task under "Completed Tasks" with a brief summary
-2. Advance "Next Task" to the following Task in the active track
-3. If the active track is fully complete, advance to the next track in the chain
-4. Commit the changes with a descriptive message
-
-This ensures a fresh session can resume from the correct task.
+If work stops mid-task, update the checkpoint and scratchpad without advancing
+the cursor. Follow `docs/LLM_LOOP.md` after compaction.
